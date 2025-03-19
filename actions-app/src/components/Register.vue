@@ -1,4 +1,4 @@
-<template>
+<template>  
     <div class="h-screen flex">
           <div class="hidden lg:flex w-full lg:w-1/2 login_img_section bg-black
           justify-around items-center">
