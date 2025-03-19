@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  cockroachdb:
+    platform: linux/amd64
+    image: cockroachdb/cockroach:v21.2.9
+    container_name: cockroachdb
+    ports:
+      - "26257:26257"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - cockroach-data:/cockroach/cockroach-data
+    command: start-single-node --insecure
+    healthcheck:
+      test: ["CMD", "cockroach", "sql", "--insecure", "--execute", "SELECT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cockroach-network
+
+  init-db:
+    platform: linux/amd64
+    image: cockroachdb/cockroach:v21.2.9
+    depends_on:
+      cockroachdb:
+        condition: service_healthy
+    volumes:
+      - ./init.sql:/init.sql
+    entrypoint: ["/cockroach/cockroach"]
+    command: ["sql", "--insecure", "--host=cockroachdb", "--port=26257", "--file=/init.sql"]
+    networks:
+      - cockroach-network
+
+  starter:
+    build:
+      context: ./starter
+      dockerfile: Dockerfile
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+    environment:
+      - DB_HOST=cockroachdb
+      - DB_PORT=26257
+      - DB_NAME=ACTIONS_COMPANIES_DB
+      - DB_USER=root
+      - DB_SSL_MODE=disable
+    volumes:
+      - starter-flag:/app/flag
+    networks:
+      - cockroach-network
+    entrypoint: >
+      sh -c '
+      if [ ! -f /app/flag/initialized ]; then
+        ./main &&
+        mkdir -p /app/flag &&
+        touch /app/flag/initialized
+      else
+        echo "Data already initialized. Skipping..."
+        exit 0
+      fi'
+
+  actions-back:
+    build:
+      context: ./actions-back
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      cockroachdb:
+        condition: service_healthy
+    environment:
+      - PORT=8080
+      - DATABASE_URL=postgres://root@cockroachdb:26257/ACTIONS_COMPANIES_DB?sslmode=disable
+    networks:
+      - cockroach-network
+
+  frontend:
+    build:
+      context: ./actions-app
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./actions-app:/app
+      - /app/node_modules
+    environment:
+      - VUE_APP_API_URL=http://actions-back:8080
+    depends_on:
+      - actions-back
+    networks:
+      - cockroach-network
+
+volumes:
+  cockroach-data:
+  starter-flag:
+
+networks:
+  cockroach-network:
+    driver: bridge 
