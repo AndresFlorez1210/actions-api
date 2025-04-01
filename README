@@ -1,3 +1,11 @@
 ## Ejecución del proyecto
 
 docker-compose up
+
+## puerto de front
+
+localhost:8081
+
+## Puerto de backend
+
+localhost:8080
