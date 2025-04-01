@@ -20,6 +20,11 @@ func (m *MockActionsRepository) GetActions(ctx context.Context) ([]entity.Action
 	return args.Get(0).([]entity.Action), args.Error(1)
 }
 
+func (m *MockActionsRepository) FilterActionsByKeyword(ctx context.Context, requestFilter entity.FilterAction) ([]entity.Action, error) {
+	args := m.Called(ctx, requestFilter)
+	return args.Get(0).([]entity.Action), args.Error(1)
+}
+
 func TestGetActions(t *testing.T) {
 	mockRepo := new(MockActionsRepository)
 	service := actionsService.NewActionsService(mockRepo)

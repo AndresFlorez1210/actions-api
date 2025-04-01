@@ -28,6 +28,11 @@ func (m *MockActionsService) GetBestActions(ctx context.Context) ([]entity.Actio
 	return args.Get(0).([]entity.Action), args.Error(1)
 }
 
+func (m *MockActionsService) FilterActionsByKeyword(ctx context.Context, requestFilter entity.FilterAction) ([]entity.Action, error) {
+	args := m.Called(ctx, requestFilter)
+	return args.Get(0).([]entity.Action), args.Error(1)
+}
+
 func TestGetActions(t *testing.T) {
 	mockService := new(MockActionsService)
 	controller := controller.NewActionsController(mockService)

@@ -15,7 +15,7 @@ func ConfigureRoutes(container *internal.Container) *mux.Router {
 	router.HandleFunc("/auth/register", container.AuthController.Register).Methods("POST")
 	router.HandleFunc("/auth/login", container.AuthController.Login).Methods("POST")
 
-	router.HandleFunc("/actions/filter", container.ActionsController.FilterActionsByKeyword).Methods("POST")
+	router.HandleFunc("/actions/filter", container.ActionsController.FilterActionsByKeyword).Methods("GET")
 
 	return router
 }

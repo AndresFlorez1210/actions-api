@@ -36,11 +36,19 @@ func (controller *ActionsController) GetBestActions(responseWriter http.Response
 }
 
 func (controller *ActionsController) FilterActionsByKeyword(responseWriter http.ResponseWriter, request *http.Request) {
-	var requestFilter entity.FilterAction
-	if err := json.NewDecoder(request.Body).Decode(&requestFilter); err != nil {
-		http.Error(responseWriter, err.Error(), http.StatusBadRequest)
+	key := request.URL.Query().Get("key")
+	value := request.URL.Query().Get("value")
+
+	if key == "" || value == "" {
+		http.Error(responseWriter, "key and value query parameters are required", http.StatusBadRequest)
 		return
 	}
+
+	requestFilter := entity.FilterAction{
+		Key:   key,
+		Value: value,
+	}
+
 	actions, err := controller.service.FilterActionsByKeyword(request.Context(), requestFilter)
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
