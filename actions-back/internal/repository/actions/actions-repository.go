@@ -23,3 +23,12 @@ func (repository *ActionsRepositoryImpl) GetActions(ctx context.Context) ([]enti
 	}
 	return actions, nil
 }
+
+func (repository *ActionsRepositoryImpl) FilterActionsByKeyword(ctx context.Context, requestFilter entity.FilterAction) ([]entity.Action, error) {
+	var actions []entity.Action
+	err := repository.db.NewSelect().Model(&actions).Where(requestFilter.Key+" = ?", requestFilter.Value).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return actions, nil
+}

@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async register(userData) {
             try {
+                console.log('TEST:::', userData)
                 const response = await register(userData);
                 this.token = response.data.token;
                 localStorage.setItem('token', this.token);

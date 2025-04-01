@@ -42,13 +42,11 @@ func main() {
 }
 
 func createConnection() *pgx.Conn {
-	// Obtener variables de entorno
 	dbHost := os.Getenv("DB_HOST")
 	if dbHost == "" {
-		dbHost = "localhost" // valor por defecto
+		dbHost = "localhost"
 	}
 
-	// Construir string de conexión
 	connStr := fmt.Sprintf("postgresql://%s@%s:%s/%s?sslmode=%s",
 		os.Getenv("DB_USER"),
 		dbHost,

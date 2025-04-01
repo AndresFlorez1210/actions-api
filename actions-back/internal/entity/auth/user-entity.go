@@ -9,7 +9,7 @@ type User struct {
 	bun.BaseModel `bun:"table:users"`
 	ID            string `json:"id" bun:",pk"`
 	Username      string `json:"username"`
-	Password      string `json:"-"`
+	Password      string `json:"password"`
 }
 
 func (user *User) HashPassword() error {

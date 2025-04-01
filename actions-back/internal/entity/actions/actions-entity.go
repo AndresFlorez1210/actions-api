@@ -15,3 +15,8 @@ type Action struct {
 	RatingTo   string `json:"rating_to"`
 	Time       string `json:"time"`
 }
+
+type FilterAction struct {
+	Key   string `json:key`
+	Value string `json:value`
+}

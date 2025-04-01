@@ -22,7 +22,6 @@ func (controller *AuthController) Register(response http.ResponseWriter, request
 		http.Error(response, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	token, err := controller.authService.Register(request.Context(), &user)
 	if err != nil {
 		http.Error(response, err.Error(), http.StatusInternalServerError)

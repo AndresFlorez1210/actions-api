@@ -26,8 +26,8 @@ func (service *AuthServiceImpl) Register(ctx context.Context, user *entity.User)
 	return config.GenerateJWT(user.ID)
 }
 
-func (service *AuthServiceImpl) Login(ctx context.Context, email, password string) (string, error) {
-	user, err := service.userRepository.GetByEmail(ctx, email)
+func (service *AuthServiceImpl) Login(ctx context.Context, username string, password string) (string, error) {
+	user, err := service.userRepository.GetByUsername(ctx, username)
 	if err != nil || !user.ComparePassword(password) {
 		return "", errors.New("invalid credentials")
 	}

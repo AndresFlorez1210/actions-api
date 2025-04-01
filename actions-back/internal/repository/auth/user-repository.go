@@ -21,8 +21,8 @@ func (repository *UserRepositoryImpl) Create(ctx context.Context, user *entity.U
 	return err
 }
 
-func (repository *UserRepositoryImpl) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
+func (repository *UserRepositoryImpl) GetByUsername(ctx context.Context, username string) (*entity.User, error) {
 	user := new(entity.User)
-	err := repository.db.NewSelect().Model(user).Where("email = ?", email).Scan(ctx)
+	err := repository.db.NewSelect().Model(user).Where("username = ?", username).Scan(ctx)
 	return user, err
 }
