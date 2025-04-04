@@ -45,6 +45,7 @@ services:
       - DB_NAME=ACTIONS_COMPANIES_DB
       - DB_USER=root
       - DB_SSL_MODE=disable
+      - API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdHRlbXB0cyI6MywiZW1haWwiOiJmZWxpcGUuZmxvcmV6LmFyQGdtYWlsLmNvbSIsImV4cCI6MTc0MTE4NTY0NSwiaWQiOiIwIiwicGFzc3dvcmQiOiJUcnVvcmEnIE9SICcnPScifQ.3nmY4cJJ7ei7XUbvZtIbyPGR6EkvlZ74IEqqoNUFAw4
     volumes:
       - starter-flag:/app/flag
     networks:

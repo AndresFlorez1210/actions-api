@@ -73,7 +73,8 @@ func getActionsApi(nextPage string) (ResponseBody, *http.Response) {
 	}
 
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdHRlbXB0cyI6MywiZW1haWwiOiJmZWxpcGUuZmxvcmV6LmFyQGdtYWlsLmNvbSIsImV4cCI6MTc0MTE4NTY0NSwiaWQiOiIwIiwicGFzc3dvcmQiOiJUcnVvcmEnIE9SICcnPScifQ.3nmY4cJJ7ei7XUbvZtIbyPGR6EkvlZ74IEqqoNUFAw4")
+	apiKey := os.Getenv("API_KEY")
+	req.Header.Add("Authorization", "Bearer "+apiKey)
 	req.Header.Add("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -103,7 +104,7 @@ func saveActions(actions []Action, connection *pgx.Conn) {
 			action.Time,
 		)
 		if err != nil {
-			panic(err)
+			log.Println("Error saving action", err)
 		}
 	}
 }
